@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/7/29.
  */
@@ -92,6 +94,11 @@ public class Utility {
         catch (Exception e){
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public static List<Weather> handleWeatherJson(String weatherJson){
+
         return null;
     }
 }

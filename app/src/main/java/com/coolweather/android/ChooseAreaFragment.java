@@ -3,7 +3,9 @@ package com.coolweather.android;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +20,10 @@ import android.widget.Toast;
 import com.coolweather.android.db.City;
 import com.coolweather.android.db.County;
 import com.coolweather.android.db.Province;
+import com.coolweather.android.gson.Weather;
 import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.Utility;
+import com.google.gson.Gson;
 
 import org.litepal.crud.DataSupport;
 
@@ -45,6 +49,10 @@ public class ChooseAreaFragment extends Fragment {
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private List<String> dataList=new ArrayList<>();
+
+    private List<String> selectedCityNameList;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
     /**
      * 省列表
      */
@@ -100,6 +108,15 @@ public class ChooseAreaFragment extends Fragment {
                     selectedCity=cityList.get(position);
                     queryCounties();
                 }else if(currentLevel == LEVEL_COUNTY){
+                    selectedCityNameList.add(countyList.get(position).getCountyName());
+                    preferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    editor=preferences.edit();
+                    Gson gson=new Gson();
+                    String strJson = gson.toJson(selectedCityNameList);
+                    editor.clear();
+                    editor.putString("selectedCityNameList",null);
+                    editor.apply();
+
                     String weatherId = countyList.get(position).getWeatherId();
                     if(getActivity() instanceof MainActivity){
                         Intent intent = new Intent(getActivity(), WeatherActivity.class);
